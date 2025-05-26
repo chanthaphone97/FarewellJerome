@@ -1,0 +1,616 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farewell Card</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+    // ======= EASY CONFIGURATION SECTION =======
+    // Person Information
+    const personName = "Jerome Desgrez";
+    const personPosition = "Engineering Department (ED) Manager";
+    
+    // Event Information
+    const eventDate = new Date("June 10, 2025 13:00:00");
+    const eventVenue = "ViewTheun Restaurant";
+    
+    // Color Theme (Blue-White Theme)
+    const colors = {
+        // Background colors
+        backgroundGradient1: "#0f2447",
+        backgroundGradient2: "#1e40af",
+        backgroundGradient3: "#93c5fd",
+        
+        // Card colors
+        primaryColor: "#1e40af",      // Dark blue
+        secondaryColor: "#3b82f6",    // Medium blue
+        accentColor: "#60a5fa",       // Light blue
+        lightAccentColor: "#dbeafe",  // Very light blue
+        
+        // Text colors
+        darkTextColor: "#0f2447",
+        lightTextColor: "white"
+    };
+    // ======= END CONFIGURATION SECTION =======
+    </script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1500px;
+        }
+        
+        .envelope {
+            width: 95%;
+            max-width: 800px;
+            aspect-ratio: 16/9;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s ease;
+            cursor: pointer;
+        }
+        
+        .envelope.open {
+            transform: rotateY(180deg);
+        }
+        
+        .envelope-front, .envelope-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 24px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2.5rem;
+        }
+        
+        .envelope-front {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 2;
+        }
+        
+        .envelope-back {
+            background: rgba(255, 255, 255, 0.95);
+            transform: rotateY(180deg);
+            overflow: hidden;
+        }
+        
+        .envelope-seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            z-index: 3;
+            border: 3px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .envelope-seal svg {
+            width: 35px;
+            height: 35px;
+        }
+        
+        .envelope-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            text-align: center;
+            opacity: 0.9;
+            font-family: 'Playfair Display', serif;
+        }
+        
+        .envelope-text h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        
+        .envelope-text p {
+            font-size: 0.9rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+        }
+        
+        .card-content {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding: 1.5rem;
+        }
+        
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subtitle {
+            font-size: 0.95rem;
+            margin-bottom: 0.7rem;
+            font-weight: 400;
+            max-width: 90%;
+            line-height: 1.5;
+        }
+        
+        .name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0.5rem 0 0.3rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .position {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        
+        .date-info {
+            border-radius: 12px;
+            padding: 0.8rem 1.5rem;
+            margin: 0.8rem 0;
+            font-size: 0.8rem;
+        }
+        
+        .countdown {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 10px;
+            padding: 0.6rem;
+            min-width: 65px;
+        }
+        
+        .countdown-number {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .countdown-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+        }
+        
+        .button {
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 0.85rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(30, 64, 175, 0.3);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+        }
+        
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(calc(100vh + 100px)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .decoration {
+            position: absolute;
+            z-index: -1;
+        }
+        
+        .circle1 {
+            top: 10%;
+            left: 10%;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            animation: float 8s infinite ease-in-out;
+        }
+        
+        .circle2 {
+            bottom: 10%;
+            right: 10%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out reverse;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(20px, -20px);
+            }
+        }
+        
+        .pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            z-index: -1;
+            background-size: 25px 25px;
+        }
+        
+        @media (max-width: 768px) {
+            .envelope {
+                max-width: 95%;
+            }
+            
+            .title {
+                font-size: 1.6rem;
+            }
+            
+            .name {
+                font-size: 1.3rem;
+            }
+            
+            .subtitle {
+                font-size: 0.8rem;
+            }
+            
+            .position {
+                font-size: 0.7rem;
+            }
+            
+            .countdown-item {
+                min-width: 55px;
+            }
+            
+            .countdown-number {
+                font-size: 1rem;
+            }
+            
+            .envelope-text h2 {
+                font-size: 1.3rem;
+            }
+            
+            .envelope-text p {
+                font-size: 0.7rem;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .envelope-front, .envelope-back {
+                padding: 1.2rem;
+            }
+            
+            .title {
+                font-size: 1.3rem;
+            }
+            
+            .name {
+                font-size: 1.2rem;
+            }
+            
+            .subtitle {
+                font-size: 0.7rem;
+            }
+            
+            .countdown {
+                gap: 0.6rem;
+            }
+            
+            .countdown-item {
+                min-width: 50px;
+                padding: 0.4rem;
+            }
+            
+            .countdown-number {
+                font-size: 0.9rem;
+            }
+            
+            .envelope-text h2 {
+                font-size: 1.2rem;
+            }
+            
+            .envelope-text p {
+                font-size: 0.6rem;
+            }
+            
+            .button {
+                padding: 0.7rem 1.8rem;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decoration circle1"></div>
+    <div class="decoration circle2"></div>
+    
+    <div class="envelope" id="envelope">
+        <div class="envelope-front">
+            <div class="envelope-seal">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
+                </svg>
+            </div>
+            <div class="envelope-text">
+                <h2>Farewell Invitation</h2>
+                <p>Click to open</p>
+            </div>
+        </div>
+        <div class="envelope-back">
+            <div class="pattern"></div>
+            <div class="card-content">
+                <h1 class="title">Farewell</h1>
+                <p class="subtitle">You are cordially invited to join the farewell party</p>
+                <div class="name" id="personNameDisplay"></div>
+                <div class="position" id="personPositionDisplay"></div>
+                
+                <div class="date-info" id="dateInfoDisplay"></div>
+                
+                <div class="countdown" id="countdown">
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="days">00</span>
+                        <span class="countdown-label">Days</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="hours">00</span>
+                        <span class="countdown-label">Hours</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="minutes">00</span>
+                        <span class="countdown-label">Minutes</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="seconds">00</span>
+                        <span class="countdown-label">Seconds</span>
+                    </div>
+                </div>
+                
+                <button class="button" id="celebrateBtn">Celebrate</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply colors from configuration
+            document.body.style.background = `linear-gradient(135deg, ${colors.backgroundGradient1} 0%, ${colors.backgroundGradient2} 50%, ${colors.backgroundGradient3} 100%)`;
+            
+            // Envelope seal
+            const envelopeSeal = document.querySelector('.envelope-seal');
+            envelopeSeal.style.background = colors.lightAccentColor;
+            envelopeSeal.querySelector('svg').style.fill = colors.primaryColor;
+            
+            // Envelope text
+            const envelopeText = document.querySelector('.envelope-text');
+            envelopeText.style.color = colors.lightTextColor;
+            
+            // Title and name
+            const title = document.querySelector('.title');
+            title.style.color = colors.primaryColor;
+            
+            // Subtitle
+            const subtitle = document.querySelector('.subtitle');
+            subtitle.style.color = colors.secondaryColor;
+            
+            // Date info
+            const dateInfo = document.querySelector('.date-info');
+            dateInfo.style.background = `rgba(${hexToRgb(colors.primaryColor)}, 0.1)`;
+            dateInfo.style.color = colors.primaryColor;
+            dateInfo.style.border = `1px solid rgba(${hexToRgb(colors.primaryColor)}, 0.2)`;
+            
+            // Countdown items
+            const countdownItems = document.querySelectorAll('.countdown-item');
+            countdownItems.forEach(item => {
+                item.style.background = `rgba(${hexToRgb(colors.primaryColor)}, 0.1)`;
+            });
+            
+            const countdownNumbers = document.querySelectorAll('.countdown-number');
+            countdownNumbers.forEach(number => {
+                number.style.color = colors.primaryColor;
+            });
+            
+            const countdownLabels = document.querySelectorAll('.countdown-label');
+            countdownLabels.forEach(label => {
+                label.style.color = colors.accentColor;
+            });
+            
+            // Button
+            const button = document.querySelector('.button');
+            button.style.background = colors.primaryColor;
+            button.style.color = colors.lightTextColor;
+            button.addEventListener('mouseenter', function() {
+                this.style.background = colors.secondaryColor;
+                this.style.boxShadow = `0 8px 20px rgba(${hexToRgb(colors.primaryColor)}, 0.3)`;
+            });
+            button.addEventListener('mouseleave', function() {
+                this.style.background = colors.primaryColor;
+            });
+            
+            // Decorations
+            const circle1 = document.querySelector('.circle1');
+            circle1.style.background = `radial-gradient(circle, rgba(${hexToRgb(colors.lightAccentColor)},0.3) 0%, rgba(${hexToRgb(colors.lightAccentColor)},0) 70%)`;
+            
+            const circle2 = document.querySelector('.circle2');
+            circle2.style.background = `radial-gradient(circle, rgba(${hexToRgb(colors.primaryColor)},0.2) 0%, rgba(${hexToRgb(colors.primaryColor)},0) 70%)`;
+            
+            const pattern = document.querySelector('.pattern');
+            pattern.style.backgroundImage = `radial-gradient(${colors.primaryColor} 1px, transparent 1px)`;
+            
+            // Set person name and position
+            document.getElementById('personNameDisplay').textContent = personName;
+            document.getElementById('personPositionDisplay').textContent = personPosition;
+            document.getElementById('personNameDisplay').style.color = colors.primaryColor;
+            document.getElementById('personPositionDisplay').style.color = colors.accentColor;
+            
+            // Format and display event date and venue
+            const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+            const timeOptions = { hour: '2-digit', minute: '2-digit' };
+            const formattedDate = eventDate.toLocaleDateString('en-US', dateOptions);
+            const formattedTime = eventDate.toLocaleTimeString('en-US', timeOptions);
+            
+            document.getElementById('dateInfoDisplay').textContent = `${formattedDate} • ${formattedTime} • ${eventVenue}`;
+            
+            const envelope = document.getElementById('envelope');
+            const celebrateBtn = document.getElementById('celebrateBtn');
+            
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = eventDate.getTime() - now;
+                
+                // If the date is in the past, show 0s
+                if (distance < 0) {
+                    document.getElementById("days").innerHTML = "00";
+                    document.getElementById("hours").innerHTML = "00";
+                    document.getElementById("minutes").innerHTML = "00";
+                    document.getElementById("seconds").innerHTML = "00";
+                    return;
+                }
+                
+                // Time calculations
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                // Display the result
+                document.getElementById("days").innerHTML = days < 10 ? "0" + days : days;
+                document.getElementById("hours").innerHTML = hours < 10 ? "0" + hours : hours;
+                document.getElementById("minutes").innerHTML = minutes < 10 ? "0" + minutes : minutes;
+                document.getElementById("seconds").innerHTML = seconds < 10 ? "0" + seconds : seconds;
+            }
+            
+            // Update the countdown every second
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            
+            // Create confetti colors based on theme
+            const confettiColors = [
+                colors.primaryColor,
+                colors.secondaryColor,
+                colors.accentColor,
+                colors.lightAccentColor,
+                colors.backgroundGradient1,
+                colors.backgroundGradient2,
+                colors.backgroundGradient3
+            ];
+            
+            // Function to create confetti
+            function createConfetti() {
+                const confettiCount = 150;
+                
+                for (let i = 0; i < confettiCount; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.classList.add('confetti');
+                        
+                        // Random properties
+                        const size = Math.random() * 15 + 5;
+                        const color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                        const shape = Math.random() > 0.5 ? '50%' : '0';
+                        
+                        // Position
+                        const left = Math.random() * 100;
+                        
+                        // Style
+                        confetti.style.width = `${size}px`;
+                        confetti.style.height = `${size}px`;
+                        confetti.style.backgroundColor = color;
+                        confetti.style.borderRadius = shape;
+                        confetti.style.left = `${left}%`;
+                        
+                        // Animation
+                        const duration = Math.random() * 3 + 2;
+                        const delay = Math.random() * 0.5;
+                        confetti.style.animation = `confettiFall ${duration}s ease-in ${delay}s forwards`;
+                        
+                        document.body.appendChild(confetti);
+                        
+                        // Remove after animation
+                        setTimeout(() => {
+                            confetti.remove();
+                        }, (duration + delay) * 1000);
+                    }, i * 15);
+                }
+            }
+            
+            // Helper function to convert hex to rgb
+            function hexToRgb(hex) {
+                // Remove the # if present
+                hex = hex.replace('#', '');
+                
+                // Parse the hex values
+                const r = parseInt(hex.substring(0, 2), 16);
+                const g = parseInt(hex.substring(2, 4), 16);
+                const b = parseInt(hex.substring(4, 6), 16);
+                
+                return `${r}, ${g}, ${b}`;
+            }
+            
+            // Event listeners
+            envelope.addEventListener('click', function() {
+                if (!envelope.classList.contains('open')) {
+                    envelope.classList.add('open');
+                    setTimeout(createConfetti, 500);
+                }
+            });
+            
+            celebrateBtn.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent triggering envelope click
+                createConfetti();
+            });
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'945b2481e795500b',t:'MTc0ODI0MDE3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
